@@ -1,4 +1,4 @@
 .PHONY: index
 
 index:
-	./_makeindex.sh
+	./makeindex.py
