@@ -41,8 +41,6 @@ Tree = namedtuple('Tree', 'name wheels subdirs')
 
 def make_tree(root):
     files = []
-    branches = []
-    dirs = []
     for it in os.scandir(root):
         if it.is_file() and it.name.endswith('.whl'):
             files.append(it.name)
@@ -54,8 +52,6 @@ def make_tree(root):
         for it in os.scandir(branch_dir):
             if it.is_file() and it.name.endswith('.whl'):
                 branch_wheels[branch].append(it.name)
-    import pprint
-    pprint.pprint(files)
     return Tree('branches', files, branch_wheels)
 
 try:

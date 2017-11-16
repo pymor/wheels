@@ -6,11 +6,9 @@ services: docker
 python:
   - 3.6
 
-install:
-    - pip install jinja2
+
 script:
-    - make -C wheels && git diff --exit-code
-    - .ci/check_wheels.py wheels/
+    - make check
 
 # runs independent of 'script' failure/success
 #after_script:
