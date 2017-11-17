@@ -44,9 +44,10 @@ def make_tree(root):
     for it in os.scandir(root):
         if it.is_file() and it.name.endswith('.whl'):
             files.append(it.name)
+    files = sorted(files)
     branch_root = os.path.join(root, 'branches')
     branch_wheels = defaultdict(list)
-    branches = [b.name for b in os.scandir(branch_root) if b.is_dir()]
+    branches = sorted([b.name for b in os.scandir(branch_root) if b.is_dir()])
     for branch in branches:
         branch_dir = os.path.join(branch_root, branch)
         for it in os.scandir(branch_dir):
