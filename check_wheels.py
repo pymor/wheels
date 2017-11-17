@@ -30,8 +30,8 @@ def _check_wheel(whl, python):
 
 def _get_check_files():
     if os.environ.get('TRAVIS', False):
-        range = os.environ['TRAVIS_COMMIT_RANGE']
-        cmd = ['git', 'diff', '--name-only', range]
+        c_range = os.environ['TRAVIS_COMMIT_RANGE']
+        cmd = ['git', 'diff', '--name-only', c_range]
         potentials = subprocess.check_output(cmd, universal_newlines=True).split('\n')
     else:
         potentials = []
