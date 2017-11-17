@@ -4,4 +4,4 @@ index:
 	./makeindex.py
 
 check:
-	./.ci/check_wheels.py .
+	./check_wheels.py .
