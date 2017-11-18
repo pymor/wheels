@@ -4,4 +4,4 @@ index:
 	./makeindex.py
 
 check:
-	./check_wheels.py .
+	./check_wheels.py ${PWD}

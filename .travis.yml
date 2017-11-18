@@ -10,6 +10,8 @@ install:
     - pip install jinja2
     - for i in 2.7 3.5 3.6 ; do docker pull pymor/python:$i ; done
 
+before_script:
+    - git diff --name-only $TRAVIS_COMMIT_RANGE
 script:
     - make check
     # fail if index is not up-to-date

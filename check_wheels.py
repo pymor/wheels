@@ -29,15 +29,17 @@ def _check_wheel(whl, python):
 
 
 def _get_check_files():
-    if os.environ.get('TRAVIS', False):
+    if 'TRAVIS_COMMIT_RANGE' in os.environ.keys():
         c_range = os.environ['TRAVIS_COMMIT_RANGE']
         cmd = ['git', 'diff', '--name-only', c_range]
         potentials = subprocess.check_output(cmd, universal_newlines=True).split('\n')
+        print('potentials from travis:\n{}'.format('\n'.join(potentials)))
     else:
         potentials = []
         for root, dirs, files in os.walk(os.path.abspath(os.path.dirname(__file__))):
             for file in files:
                 potentials.append(file)
+        print('potentials from filesystem:\n{}'.format('\n'.join(potentials)))
     return (p for p in potentials if p.endswith('.whl'))
 
 
@@ -50,4 +52,6 @@ for whl in _get_check_files():
     python = '{}.{}'.format(*py_regex.match(whl).group(1))
     if python not in PYTHONS:
         raise RuntimeError('cannot check {}, wrong python version {}'.format(whl, python))
-    _check_install(whl, python)
+    #_check_install(whl, python)
+    print('checking {} in {}'.format(whl, target_dir))
+    _check_wheel(whl, python)
