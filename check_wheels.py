@@ -45,13 +45,13 @@ def _get_check_files():
 
 py_regex = re.compile('(?:.*\-cp)(\d\d)(?:\-.*\.whl)')
 for whl in _get_check_files():
-    whl = os.path.basename(whl)
-    if '-win' in whl:
-        print('Not checking Windows Wheel {}'.format(whl), file=sys.stderr)
+    whl_fn = os.path.basename(whl)
+    if '-win' in whl_fn:
+        print('Not checking Windows Wheel {}'.format(whl_fn), file=sys.stderr)
         continue
-    python = '{}.{}'.format(*py_regex.match(whl).group(1))
+    python = '{}.{}'.format(*py_regex.match(whl_fn).group(1))
     if python not in PYTHONS:
         raise RuntimeError('cannot check {}, wrong python version {}'.format(whl, python))
-    #_check_install(whl, python)
     print('checking {} in {}'.format(whl, target_dir))
     _check_wheel(whl, python)
+    _check_install(whl, python)
