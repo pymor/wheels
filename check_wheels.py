@@ -57,5 +57,5 @@ for whl in _get_check_files():
     if python not in PYTHONS:
         raise RuntimeError('cannot check {}, wrong python version {}'.format(whl, python))
     print('checking {} in {}'.format(whl, target_dir))
-    _check_wheel(whl, python)
+    #_check_wheel(whl, python)
     _check_install(whl, python)
