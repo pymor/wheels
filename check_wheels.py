@@ -25,6 +25,7 @@ def _check_wheel(whl, python):
     arg = ['docker', 'run', '-t', '-v', '{}:/io'.format(target_dir),
            'pymor/python:{}'.format(python),
            'bash', '-c', 'wheel verify /io/{}'.format(whl)]
+    assert 'dirty' not in whl
     return subprocess.check_call(arg)
 
 
