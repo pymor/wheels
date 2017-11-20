@@ -46,6 +46,9 @@ def _get_check_files():
 
 py_regex = re.compile('(?:.*\-cp)(\d\d)(?:\-.*\.whl)')
 for whl in _get_check_files():
+    # skip deleted
+    if not os.path.exists(whl):
+        continue
     whl_fn = os.path.basename(whl)
     if '-win' in whl_fn:
         print('Not checking Windows Wheel {}'.format(whl_fn), file=sys.stderr)
