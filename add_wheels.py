@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import bisect
 import contextlib
 import shutil
 import sys
@@ -27,7 +26,7 @@ def _sort_wheels(filenames):
     wheels = defaultdict(list)
     for fn in filenames:
         python = '{}.{}'.format(*py_regex.match(fn).group(1))
-        bisect.insort(wheels[python], fn)
+        wheels[python] = list(sorted(list(wheels[python]) + [fn]))
     return wheels
 
 
@@ -48,6 +47,12 @@ def _git_add(fn):
     tdir = _target_dir()
     with remember_cwd(tdir):
         subprocess.check_call(['git', 'add', os.path.relpath(fn, tdir)])
+
+
+def _git_rm(fn):
+    tdir = _target_dir()
+    with remember_cwd(tdir):
+        subprocess.check_call(['git', 'rm', '-f', os.path.relpath(fn, tdir)])
 
 
 def _update_link(source, branch):
@@ -73,8 +78,8 @@ for py in new_wheels.keys():
     new_whl_count = len(new_wheels[py])
     current_whl_count = len(current_wheels[py])
     delete_last_n = KEEP_N_WHEELS + new_whl_count - current_whl_count
-    for fn in current_wheels[py][-delete_last_n:]:
-        os.unlink(fn)
+    for fn in current_wheels[py][:-delete_last_n+1]:
+        _git_rm(fn)
     for fn in new_wheels[py]:
         shutil.copy(fn, target_dir)
         new_fn = os.path.join(target_dir, os.path.basename(fn))
