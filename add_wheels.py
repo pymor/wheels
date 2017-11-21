@@ -1,13 +1,26 @@
 #!/usr/bin/env python3
 import bisect
+import contextlib
 import shutil
 import sys
 import re
 import os
+import subprocess
 from collections import defaultdict
+from makeindex import make_index
 
 py_regex = re.compile('(?:.*\-cp)(\d\d)(?:\-.*\.whl)')
 KEEP_N_WHEELS = 2
+
+
+@contextlib.contextmanager
+def remember_cwd(dirname):
+    curdir = os.getcwd()
+    try:
+        os.chdir(dirname)
+        yield curdir
+    finally:
+        os.chdir(curdir)
 
 
 def _sort_wheels(filenames):
@@ -18,7 +31,7 @@ def _sort_wheels(filenames):
     return wheels
 
 
-def _target_dir(branch):
+def _target_dir(branch='master'):
     dir = os.path.abspath(os.path.dirname(__file__))
     if branch != 'master':
         dir = os.path.join(dir, 'branches', branch)
@@ -31,19 +44,23 @@ def _current_wheels(branch):
                          and f.is_file() and not f.is_symlink()))
 
 
+def _git_add(fn):
+    tdir = _target_dir()
+    with remember_cwd(tdir):
+        subprocess.check_call(['git', 'add', os.path.relpath(fn, tdir)])
+
+
 def _update_link(source, branch):
-    curdir = os.getcwd()
     target_dir = _target_dir(branch)
-    os.chdir(target_dir)
     link_source = os.path.relpath(source, target_dir)
-    link_fn = 'pymor-{}-latest-{}'.format(branch, link_source[-link_source.find('-cp'):])
-    try:
-        os.unlink(link_fn)
-    except FileNotFoundError:
-        pass
-    print('{} -> {}'.format(link_source, link_fn))
-    os.symlink(link_source, link_fn)
-    os.chdir(curdir)
+    link_fn = 'pymor-{}-latest-{}'.format(branch, link_source[link_source.find('-cp')+1:])
+    with remember_cwd(target_dir):
+        try:
+            os.unlink(link_fn)
+        except FileNotFoundError:
+            pass
+        os.symlink(link_source, link_fn)
+    _git_add(os.path.relpath(os.path.join(target_dir, link_fn), _target_dir()))
 
 
 branch = sys.argv[1]
@@ -60,6 +77,11 @@ for py in new_wheels.keys():
         os.unlink(fn)
     for fn in new_wheels[py]:
         shutil.copy(fn, target_dir)
+        new_fn = os.path.join(target_dir, os.path.basename(fn))
+        _git_add(new_fn)
 current_wheels = _current_wheels(branch)
 for py in current_wheels.keys():
     _update_link(current_wheels[py][0], branch)
+root = _target_dir()
+make_index(root)
+_git_add(os.path.join(root, 'index.html'))

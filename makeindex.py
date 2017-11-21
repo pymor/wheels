@@ -39,7 +39,7 @@ tpl = '''
 Tree = namedtuple('Tree', 'name wheels subdirs')
 
 
-def make_tree(root):
+def _make_tree(root):
     files = []
     for it in os.scandir(root):
         if it.is_file() and it.name.endswith('.whl'):
@@ -55,10 +55,16 @@ def make_tree(root):
                 branch_wheels[branch].append(it.name)
     return Tree('branches', files, branch_wheels)
 
-try:
-    path = sys.argv[1]
-except IndexError:
-    path = os.getcwd()
-path = os.path.abspath(path)
-with open(os.path.join(path, 'index.html'), 'wt') as out:
-    out.write(Template(tpl).render(tree=make_tree(path)))
+
+def make_index(path):
+    path = os.path.abspath(path)
+    with open(os.path.join(path, 'index.html'), 'wt') as out:
+        out.write(Template(tpl).render(tree=_make_tree(path)))
+
+
+if __name__ == '__main__':
+    try:
+        path = sys.argv[1]
+    except IndexError:
+        path = os.getcwd()
+    make_index(path)
