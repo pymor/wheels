@@ -5,6 +5,7 @@ import sys
 import glob
 from collections import namedtuple, defaultdict
 from jinja2 import Template
+import bisect
 
 
 tpl = '''
@@ -52,7 +53,7 @@ def _make_tree(root):
         branch_dir = os.path.join(branch_root, branch)
         for it in os.scandir(branch_dir):
             if it.is_file() and it.name.endswith('.whl'):
-                branch_wheels[branch].append(it.name)
+                bisect.insort(branch_wheels[branch], it.name)
     return Tree('branches', files, branch_wheels)
 
 
