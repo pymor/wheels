@@ -9,7 +9,7 @@ from collections import defaultdict
 from makeindex import make_index
 
 py_regex = re.compile('(?:.*\-cp)(\d\d)(?:\-.*\.whl)')
-KEEP_N_WHEELS = 2
+KEEP_N_WHEELS = 10
 
 
 @contextlib.contextmanager
