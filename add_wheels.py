@@ -58,7 +58,7 @@ def _git_rm(fn):
 def _update_link(source, branch):
     target_dir = _target_dir(branch)
     link_source = os.path.relpath(source, target_dir)
-    link_fn = 'pymor-{}-latest-{}'.format(branch, link_source[link_source.find('-cp')+1:])
+    link_fn = 'pymor-{}-latest-9999.9.rc0-{}'.format(branch, link_source[link_source.find('-cp')+1:])
     with remember_cwd(target_dir):
         try:
             os.unlink(link_fn)
