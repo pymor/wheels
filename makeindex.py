@@ -11,7 +11,7 @@ import bisect
 tpl = '''
 <!doctype html>
 <head>
-<title>Path: {{ tree.name }}</title>
+<title>pyMOR Wheels</title>
 </head>
 <body>
 <h1>Master</h1>
