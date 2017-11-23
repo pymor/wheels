@@ -16,18 +16,22 @@ tpl = '''
 <body>
 <h1>Master</h1>
 <ul>
-    {%- for wheel in tree.wheels -%}
-        <li><a href="{{ wheel }}">{{ wheel }}</a></li>
-    {%- endfor %}
+{%- for wheel in tree.wheels %}
+    <li><a href="{{ wheel }}">
+        {{ wheel }}
+    </a></li>
+{%- endfor %}
 </ul>
 <h1>Branches</h1>
 <ul>
     {%- for branch, wheels in tree.subdirs.items() -%}
     <li><h2>{{ branch }}</h2>
         <ul>
-            {%- for wheel in wheels -%}
-                <li><a href="branches/{{ branch }}/{{ wheel }}">{{ wheel }}</a></li>
-            {%- endfor %}
+        {%- for wheel in wheels %}
+            <li><a href="branches/{{ branch }}/{{ wheel }}">
+                {{ wheel }}
+            </a></li>
+        {%- endfor %}
         </ul>
     </li>
     {%- endfor %}
