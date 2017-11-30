@@ -48,7 +48,7 @@ def _current_wheels(branch):
 def _git_add(fn):
     tdir = _target_dir()
     with remember_cwd(tdir):
-        subprocess.check_call(['git', 'add', os.path.relpath(fn, tdir)])
+        subprocess.check_call(['git', 'add', fn.relative_to(tdir)])
 
 
 def _git_rm(fn):
@@ -81,12 +81,18 @@ for py in new_wheels.keys():
     current_whl_count = len(current_wheels[py])
     delete_last_n = KEEP_N_WHEELS + new_whl_count - current_whl_count
     for fn in current_wheels[py][:-delete_last_n+1]:
-        _git_rm(fn)
+        _git_rm(Path(fn))
     for fn in new_wheels[py]:
         shutil.copy(fn, target_dir)
         new_fn = os.path.join(target_dir, os.path.basename(fn))
-        _git_add(new_fn)
+        _git_add(Path(new_fn))
 
+# always update master to cover new branch
 root = Path(_target_dir())
-make_index(root, name=branch)
-_git_add(os.path.join(root, 'index.html'))
+make_index(root, name='master')
+
+branch_dir = Path(_target_dir(branch))
+make_index(branch_dir, name=branch)
+
+_git_add(root / 'index.html')
+_git_add(branch_dir / 'index.html')

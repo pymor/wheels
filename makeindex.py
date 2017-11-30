@@ -22,7 +22,7 @@ to install latest:
 {% if tree.name == 'master' %}
 pip install --find-links=https://wheels.pymor.org/index.html pymor
 {% else %}
-pip install --find-links=https://wheels.pymor.org/branches/{{tree.name}}/index.html pymor
+pip install --find-links=https://wheels.pymor.org/branches/{{tree.name}} pymor
 {% endif  %}
 </pre>
 <ul>
