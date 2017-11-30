@@ -86,5 +86,5 @@ for py in new_wheels.keys():
         _git_add(new_fn)
 
 root = _target_dir()
-make_index(root)
+make_index(root, name=branch)
 _git_add(os.path.join(root, 'index.html'))
