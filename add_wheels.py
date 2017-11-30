@@ -84,9 +84,7 @@ for py in new_wheels.keys():
         shutil.copy(fn, target_dir)
         new_fn = os.path.join(target_dir, os.path.basename(fn))
         _git_add(new_fn)
-current_wheels = _current_wheels(branch)
-for py in current_wheels.keys():
-    _update_link(current_wheels[py][0], branch)
+
 root = _target_dir()
 make_index(root)
 _git_add(os.path.join(root, 'index.html'))
