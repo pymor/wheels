@@ -6,6 +6,8 @@ import re
 import os
 import subprocess
 from collections import defaultdict
+from pathlib import Path
+
 from makeindex import make_index
 
 py_regex = re.compile('(?:.*\-cp)(\d\d)(?:\-.*\.whl)')
@@ -85,6 +87,6 @@ for py in new_wheels.keys():
         new_fn = os.path.join(target_dir, os.path.basename(fn))
         _git_add(new_fn)
 
-root = _target_dir()
+root = Path(_target_dir())
 make_index(root, name=branch)
 _git_add(os.path.join(root, 'index.html'))
