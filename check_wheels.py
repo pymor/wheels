@@ -5,7 +5,7 @@ import os
 import re
 import subprocess
 
-PYTHONS = ['2.7', '3.5', '3.6', '3.7-rc']
+PYTHONS = ['3.5', '3.6', '3.7']
 
 try:
     target_dir = sys.argv[1]
